@@ -54,6 +54,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jolie.lang.Constants;
 import jolie.lang.parse.OLParseTreeOptimizer;
@@ -95,6 +96,7 @@ import jolie.tracer.PrintingTracer;
 import jolie.tracer.Tracer;
 import logger.JsonLogger;
 import logger.LogMessage;
+import logger.LoggerLevel;
 import logger.SimpleAbstractLogger;
 
 /**
@@ -879,7 +881,7 @@ public class Interpreter
                   logger = new JsonLogger();
                 
                 }
-		logger.setLevel( cmdParser.logLevel() );
+		//logger.setLevel( Level.SEVERE );
 		
 		exitingLock = new ReentrantLock();
 		exitingCondition = exitingLock.newCondition();

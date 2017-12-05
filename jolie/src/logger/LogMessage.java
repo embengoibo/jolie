@@ -67,7 +67,15 @@ public class LogMessage {
       } else{
         return true;
       }
-    } 
+    }
+    
+    public boolean hasErrorType(){
+     if (errorType == null){
+        return false;
+      } else{
+        return true;
+      }
+    }
     
    public void setErrorCode(String errorCode){
        this.errorCode = errorCode;

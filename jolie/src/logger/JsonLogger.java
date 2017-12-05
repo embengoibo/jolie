@@ -30,6 +30,7 @@ public class JsonLogger extends SimpleAbstractLogger {
 
     @Override
     protected void writeLog(LogMessage logMessage) {
+        
          if (logMessage.getLoggerLevel() == LoggerLevel.SEVERE){
              System.out.print("{\"Level\":");
              System.out.print("\"SEVERE\",");
@@ -39,9 +40,21 @@ public class JsonLogger extends SimpleAbstractLogger {
              System.out.print("{\"Level\":");
              System.out.print("\"WARNING\",");
           }   
+         
+          if (logMessage.getLoggerLevel() == LoggerLevel.INFO){
+             System.out.print("{\"Level\":");
+             System.out.print("\"INFO\",");
+          }
+          
+          if (logMessage.getLoggerLevel() == LoggerLevel.FINE){
+             System.out.print("{\"Level\":");
+             System.out.print("\"INFO\",");
+          }
+          if (logMessage.hasErrorType()){
              System.out.print("\"ErrorType\":");
              System.out.print("\""+ logMessage.getErrorType() +"\",");
-             if (logMessage.getData().hasChildren()){
+          }
+          if (logMessage.getData().hasChildren()){
                  Iterator<Map.Entry<String, ValueVector>> iterator = logMessage.getData().children().entrySet().iterator();
                  String dataString = "{";
                  int counter = 0;
@@ -62,10 +75,10 @@ public class JsonLogger extends SimpleAbstractLogger {
                      }
                  }
                  System.out.print("\"data\":");
-                 System.out.print(dataString + "}");
+                 System.out.print(dataString + "}\n");
              }else{
                  System.out.print("\"data\":");
-                 System.out.print("\""+ logMessage.getData().strValue() + "\"}");
+                 System.out.print("\""+ logMessage.getData().strValue() + "\"}\n");
              }
          
     }

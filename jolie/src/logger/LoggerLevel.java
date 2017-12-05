@@ -23,5 +23,5 @@ package logger;
  * @author maschio
  */
 public enum LoggerLevel {
-    SEVERE,WARNING,TRACE    
+    SEVERE,WARNING,TRACE,INFO,FINE    
 }

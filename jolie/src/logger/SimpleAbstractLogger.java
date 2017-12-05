@@ -48,14 +48,16 @@ public abstract class SimpleAbstractLogger {
      this.level = level;
     }
     
+
+    
     public void info (LogMessage logMessage){
-        logMessage.setLoggerLevel(LoggerLevel.WARNING);
+        logMessage.setLoggerLevel(LoggerLevel.INFO);
         writeLog(logMessage);
     
     }
     
     public void fine (LogMessage logMessage){
-        logMessage.setLoggerLevel(LoggerLevel.WARNING);
+        logMessage.setLoggerLevel(LoggerLevel.FINE);
         writeLog(logMessage);
     }
         
