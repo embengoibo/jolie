@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package logger;
+package jolie.logger;
 
 import java.util.logging.Level;
 
@@ -24,9 +24,9 @@ import java.util.logging.Level;
  *
  * @author maschio
  */
-public abstract class SimpleAbstractLogger {
+public abstract class AbstractLogger {
     
-    private Level level ; 
+    private LoggerLevel level ; 
     protected abstract void writeLog (LogMessage logMessage);
     public void severe (LogMessage logMessage){
         logMessage.setLoggerLevel(LoggerLevel.SEVERE);
@@ -44,7 +44,7 @@ public abstract class SimpleAbstractLogger {
         writeLog(logMessage);
     };
     
-    public void setLevel ( Level level){
+    public void setLevel ( LoggerLevel level){
      this.level = level;
     }
     

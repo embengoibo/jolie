@@ -49,6 +49,7 @@ import java.util.logging.Level;
 import jolie.jap.JapURLConnection;
 import jolie.lang.Constants;
 import jolie.lang.parse.Scanner;
+import jolie.logger.LoggerLevel;
 import jolie.runtime.correlation.CorrelationEngine;
 import jolie.util.Helpers;
 
@@ -77,7 +78,7 @@ public class CommandLineParser implements Closeable
 	private final boolean typeCheck;
 	private final boolean tracer;
 	private final boolean check;
-	private final Level logLevel;
+	private final LoggerLevel logLevel;
 	private File programDirectory = null;
         private String logType = "NORMAL";
 	
@@ -94,7 +95,7 @@ public class CommandLineParser implements Closeable
 	 * Returns the {@link Level} of the logger of this interpreter.
 	 * @return the {@link Level} of the logger of this interpreter.
 	 */
-	public Level logLevel()
+	public LoggerLevel logLevel()
 	{
 		return logLevel;
 	}
@@ -374,7 +375,7 @@ public class CommandLineParser implements Closeable
 		boolean bTracer = false;
 		boolean bCheck = false;
 		boolean bTypeCheck = false; // Default for typecheck
-		Level lLogLevel = Level.INFO;
+		LoggerLevel lLogLevel = LoggerLevel.INFO;
 		List< String > programArgumentsList = new ArrayList<>();
 		Deque< String > includeList = new LinkedList<>();
 		List< String > libList = new ArrayList<>();
@@ -464,16 +465,16 @@ public class CommandLineParser implements Closeable
 				String level = argsList.get( i );
 				switch( level ) {
 				case "severe":
-					lLogLevel = Level.SEVERE;
+					lLogLevel = LoggerLevel.SEVERE;
 					break;
 				case "warning":
-					lLogLevel = Level.WARNING;
+					lLogLevel = LoggerLevel.WARNING;
 					break;
 				case "fine":
-					lLogLevel = Level.FINE;
+					lLogLevel = LoggerLevel.FINE;
 					break;
 				case "info":
-					lLogLevel = Level.INFO;
+					lLogLevel = LoggerLevel.INFO;
 					break;
 				}
 				optionsList.add( argsList.get( i ) );

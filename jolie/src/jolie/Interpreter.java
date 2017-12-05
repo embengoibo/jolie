@@ -94,10 +94,11 @@ import jolie.runtime.embedding.EmbeddedServiceLoaderFactory;
 import jolie.tracer.DummyTracer;
 import jolie.tracer.PrintingTracer;
 import jolie.tracer.Tracer;
-import logger.JsonLogger;
-import logger.LogMessage;
-import logger.LoggerLevel;
-import logger.SimpleAbstractLogger;
+import jolie.logger.JsonLogger;
+import jolie.logger.LogMessage;
+import jolie.logger.LoggerLevel;
+import jolie.logger.AbstractLogger;
+import jolie.logger.NormalLogger;
 
 /**
  * The Jolie interpreter engine.
@@ -261,7 +262,7 @@ public class Interpreter
 	private final Value globalValue = Value.createRootValue();
 	private final String[] arguments;
 	private final Collection< EmbeddedServiceLoader > embeddedServiceLoaders = new ArrayList<>();
-	private SimpleAbstractLogger logger ;
+	private AbstractLogger logger ;
 	
 	private final Map< String, DefinitionProcess > definitions = new HashMap<>();
 	private final Map< String, OutputPort > outputPorts = new HashMap<>();
@@ -880,8 +881,10 @@ public class Interpreter
 		if ("JSON".equals(cmdParser.logType())){
                   logger = new JsonLogger();
                 
+                }else{
+                  logger = new NormalLogger();
                 }
-		//logger.setLevel( Level.SEVERE );
+		 logger.setLevel( cmdParser.logLevel() );
 		
 		exitingLock = new ReentrantLock();
 		exitingCondition = exitingLock.newCondition();
@@ -1058,7 +1061,9 @@ public class Interpreter
              * 2 - initExec must be instantiated before we can receive communications.
              */
             if ( buildOOIT() == false && !check ) {
-                throw new InterpreterException( "Error: the interpretation environment couldn't have been initialized" );
+                InterpreterException e = new InterpreterException( "Error: the interpretation environment couldn't have been initialized" );
+                logSevere(e);
+                throw e;
             }
             if ( check ){
                 exit();
@@ -1246,7 +1251,9 @@ public class Interpreter
 				if ( o instanceof Program ) {
 					program = (Program)o;
 				} else {
-					throw new InterpreterException( "Input compiled program is not a JOLIE program" );
+                                        InterpreterException e = new InterpreterException(  "Input compiled program is not a JOLIE program" );
+					logSevere(e);
+                                        throw e;
 				}
 			} else {
 				if ( this.internalServiceProgram != null ) {
@@ -1279,7 +1286,9 @@ public class Interpreter
 			} catch( SemanticException e ) {
                                 LogMessage logMessage = new LogMessage(e.getErrorMessages());
 				logger.severe( logMessage);
-				throw new InterpreterException( "Exiting" );
+                                InterpreterException t = new InterpreterException( "Exiting" );
+                                logSevere(t);
+				throw t;
 			}
 
 			if ( cmdParser.typeCheck() ) {
@@ -1289,7 +1298,9 @@ public class Interpreter
 					semanticVerifier.correlationFunctionInfo()
 				);
 				if ( !typeChecker.check() ) {
-					throw new InterpreterException( "Exiting" );
+                                   InterpreterException t = new InterpreterException( "Exiting" );
+                                   logSevere(t);
+				   throw t;
 				}
 			}
 
@@ -1305,7 +1316,9 @@ public class Interpreter
 			}
 
 		} catch( IOException | ParserException | ClassNotFoundException e ) {
-			throw new InterpreterException( e );
+                        InterpreterException t = new InterpreterException( e );
+                        logSevere(t);
+		        throw t;
 		} finally {
 			cmdParser = null; // Free memory
 		}

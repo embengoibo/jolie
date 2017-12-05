@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package logger;
+package jolie.logger;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -26,7 +26,7 @@ import jolie.runtime.ValueVector;
  *
  * @author maschio
  */
-public class JsonLogger extends SimpleAbstractLogger {
+public class JsonLogger extends AbstractLogger {
 
     @Override
     protected void writeLog(LogMessage logMessage) {
@@ -78,7 +78,11 @@ public class JsonLogger extends SimpleAbstractLogger {
                  System.out.print(dataString + "}\n");
              }else{
                  System.out.print("\"data\":");
-                 System.out.print("\""+ logMessage.getData().strValue() + "\"}\n");
+                 if (logMessage.getData().strValue().contains("\\")){
+                   System.out.print("\""+ logMessage.getData().strValue().replace("\\", "\\\\") + "\"}\n");
+                 }else{
+                   System.out.print("\""+ logMessage.getData().strValue() + "\"}\n");
+                 }
              }
          
     }
