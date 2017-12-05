@@ -93,6 +93,9 @@ import jolie.runtime.embedding.EmbeddedServiceLoaderFactory;
 import jolie.tracer.DummyTracer;
 import jolie.tracer.PrintingTracer;
 import jolie.tracer.Tracer;
+import logger.JsonLogger;
+import logger.LogMessage;
+import logger.SimpleAbstractLogger;
 
 /**
  * The Jolie interpreter engine.
@@ -256,7 +259,7 @@ public class Interpreter
 	private final Value globalValue = Value.createRootValue();
 	private final String[] arguments;
 	private final Collection< EmbeddedServiceLoader > embeddedServiceLoaders = new ArrayList<>();
-	private static final Logger logger = Logger.getLogger( "Jolie" );
+	private SimpleAbstractLogger logger ;
 	
 	private final Map< String, DefinitionProcess > definitions = new HashMap<>();
 	private final Map< String, OutputPort > outputPorts = new HashMap<>();
@@ -683,7 +686,8 @@ public class Interpreter
 	 */
 	public void logInfo( String message )
 	{
-		logger.info( logPrefix + message );
+		LogMessage logMessage = new LogMessage(logPrefix + message);
+                logger.info( logMessage );
 	}
 	
 	/**
@@ -692,7 +696,8 @@ public class Interpreter
 	 */
 	public void logFine( String message )
 	{
-		logger.fine( logPrefix + message );
+                 LogMessage logMessage = new LogMessage(logPrefix + message);
+		logger.fine( logMessage );
 	}
 	
 	/**
@@ -701,9 +706,8 @@ public class Interpreter
 	 */
 	public void logFine( Throwable t )
 	{
-		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		t.printStackTrace( new PrintStream( bs ) );
-		logger.fine( logPrefix + bs.toString() );
+                LogMessage logMessage = new LogMessage(t);
+		logger.fine( logMessage);
 	}
 
 	/**
@@ -712,7 +716,8 @@ public class Interpreter
 	 */
 	public void logSevere( String message )
 	{
-		logger.severe( logPrefix + message );
+	     LogMessage logMessage = new LogMessage(logPrefix + message);	
+             logger.severe( logMessage );
 	}
 
 	/**
@@ -720,8 +725,9 @@ public class Interpreter
 	 * @param message the message to log
 	 */
 	public void logWarning( String message )
-	{
-		logger.warning( logPrefix + message );
+	{       
+	      LogMessage logMessage = new LogMessage(logPrefix + message);	
+              logger.warning( logMessage);
 	}
 
 	/**
@@ -733,7 +739,8 @@ public class Interpreter
 	{
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		t.printStackTrace( new PrintStream( bs ) );
-		logger.severe( logPrefix + bs.toString() );
+                LogMessage logMessage = new LogMessage(t);
+		logger.severe( logMessage);
 	}
 
 	/**
@@ -745,7 +752,8 @@ public class Interpreter
 	{
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		t.printStackTrace( new PrintStream( bs ) );
-		logger.warning( logPrefix + bs.toString() );
+                LogMessage logMessage = new LogMessage(t);
+		logger.warning( logMessage );
 	}
 	
 	/**
@@ -867,7 +875,10 @@ public class Interpreter
 		} else {
 			tracer = new DummyTracer();
 		}
-		
+		if ("JSON".equals(cmdParser.logType())){
+                  logger = new JsonLogger();
+                
+                }
 		logger.setLevel( cmdParser.logLevel() );
 		
 		exitingLock = new ReentrantLock();
@@ -1264,7 +1275,8 @@ public class Interpreter
 			try {
 				semanticVerifier.validate();
 			} catch( SemanticException e ) {
-				logger.severe( e.getErrorMessages() );
+                                LogMessage logMessage = new LogMessage(e.getErrorMessages());
+				logger.severe( logMessage);
 				throw new InterpreterException( "Exiting" );
 			}
 

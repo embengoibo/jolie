@@ -79,6 +79,7 @@ public class CommandLineParser implements Closeable
 	private final boolean check;
 	private final Level logLevel;
 	private File programDirectory = null;
+        private String logType = "NORMAL";
 	
 	/**
 	 * Returns the arguments passed to the JOLIE program.
@@ -97,6 +98,10 @@ public class CommandLineParser implements Closeable
 	{
 		return logLevel;
 	}
+        
+        public String logType(){
+            return logType;  
+        }
 	
 	/**
 	 * Returns
@@ -439,6 +444,14 @@ public class CommandLineParser implements Closeable
 				} else if ( "true".equals( typeCheckStr ) ) {
 					bTypeCheck = true;
 				}
+                        } else if ( "--logType".equals( argsList.get( i ) ) ) {
+				optionsList.add( argsList.get( i ) );
+				i++;
+				String logTypeLocal = argsList.get( i );
+				optionsList.add( argsList.get( i ) );
+				if (!logTypeLocal.isEmpty()){
+                                   logType= logTypeLocal;
+                                }        
 			} else if ( "--check".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				bCheck = true;
