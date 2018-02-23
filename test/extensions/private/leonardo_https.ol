@@ -5,7 +5,7 @@ include "console.iol"
 
 interface HTTPInterface {
 RequestResponse:
-	default(DefaultOperationHttpRequest)(undefined)
+	default(undefined)(undefined)
 }
 
 
@@ -19,25 +19,22 @@ inputPort HttpsInput {
 	   .debug.showContent = DebugHttpContent;
 	   .format -> format;
 	   .contentType -> mime;
-      .statusCode -> statusCode;
-	   .default = "default";
-		 .ssl.keyStore = "./private/https_leonardo/ssl/KeyStore.jks";
+     .statusCode -> statusCode;
+		 .default= "default";
+		 .ssl.keyStore = "./extensions/private/https_leonardo/ssl/KeyStore.jks";
 		 .ssl.keyStorePassword ="a4KPCrUxShYsjkhQ"
-
    }
    Interfaces: HTTPInterface
 }
 
-execution{ sequential }
-init {
-  setMimeTypeFile@File("./private/https_leonardo/META-INF/mime.types")()
-}
+execution{ concurrent }
+
 main{
 
   [ default( request )( response ) {
 		scope( s ) {
 			install( FileNotFound => println@Console( "File not found: " + file.filename )() );
-
+      setMimeTypeFile@File("./extensions/private/https_leonardo/META-INF/mime.types")();
 			s = request.operation;
 			s.regex = "\\?";
 			split@StringUtils( s )( s );
@@ -47,7 +44,7 @@ main{
 				s.result[0] = DefaultPage
 			};
 			pagename = s.result[0];
-			file.filename = "./private/https_leonardo/www/" + s.result[0];
+			file.filename = "/extensions/private/https_leonardo/www/" + s.result[0];
 
 			getMimeType@File( file.filename )( mime );
 			mime.regex = "/";
