@@ -652,6 +652,10 @@ public class CommandLineParser implements Closeable
 	{
 		return optionArgs;
 	}
+        
+        public void parse() throws CommandLineException{
+        
+        }
 
 	private String parseJapManifestForMainProgram( Manifest manifest, JarFile japFile )
 	{
