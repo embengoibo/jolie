@@ -715,7 +715,7 @@ public class CommandLineParser implements Closeable
 		throws FileNotFoundException, IOException
 	{
 		GetOLStreamResult result = new GetOLStreamResult();
-
+                
 		URL olURL = null;
 		File f = new File( olFilepath ).getAbsoluteFile();
 		if ( f.exists() ) {
