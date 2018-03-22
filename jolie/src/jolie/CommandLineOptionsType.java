@@ -38,14 +38,14 @@ import jolie.runtime.correlation.CorrelationEngine;
  *
  * @author maschio
  */
-public class CommandLineOptions
+public class CommandLineOptionsType
 {
 
 	private final String commLimit;
 	private final String connCache;
 	private final int connectionLimit;
 	private final int connectionsCache;
-	private final CorrelationEngine correlationEngine;
+	private final CorrelationEngine.Type correlationEngineType;
 	private final boolean typeCheck;
 	private final boolean check;
 	private final boolean trace;
@@ -56,14 +56,15 @@ public class CommandLineOptions
 	private final List< String> libList;
 	private final URL[] libURLs;
 	private final JolieClassLoader jolieClassLoader;
+        private final String programDirectory; 
 
-	private CommandLineOptions( CommandLineOptionsBuilder builder )
+	private CommandLineOptionsType( CommandLineOptionsBuilder builder )
 	{
 		this.commLimit = builder.commLimit;
 		this.connCache = builder.connCache;
 		this.connectionLimit = builder.connectionLimit;
 		this.connectionsCache = builder.connectionsCache;
-		this.correlationEngine = builder.correlationEngine;
+		this.correlationEngineType = builder.correlationEngineType;
 		this.typeCheck = builder.typeCheck;
 		this.check = builder.check;
 		this.log = builder.log;
@@ -74,6 +75,7 @@ public class CommandLineOptions
 		this.libList = builder.libList;
 		this.libURLs = builder.libURLs;
 		this.jolieClassLoader = builder.jolieClassLoader;
+                this.programDirectory = builder.programDirectory;
 		
 	}
 
@@ -92,14 +94,14 @@ public class CommandLineOptions
 		return this.connCache;
 	}
 
-	public boolean hasCorrelationEngine()
+	public boolean hasCorrelationAlgorithmType()
 	{
-		return this.correlationEngine != null;
+		return this.correlationEngineType != null;
 	}
 
-	public CorrelationEngine correlationAlgorithm()
+	public CorrelationEngine.Type correlationEngine()
 	{
-		return this.correlationEngine;
+		return this.correlationEngineType;
 	}
 
 	public boolean typeCheck()
@@ -186,6 +188,10 @@ public class CommandLineOptions
 	{
 		return libURLs;
 	}
+        
+        public String programDirectory (){
+          return this.programDirectory;
+        }
 
 	public JolieClassLoader jolieClassLoader()
 	{
@@ -198,8 +204,7 @@ public class CommandLineOptions
 		private String connCache;
 		private int connectionLimit;
 		private int connectionsCache;
-		private String correlationAlgorithm;
-		private CorrelationEngine correlationEngine;
+		private CorrelationEngine.Type correlationEngineType;
 		private boolean typeCheck;
 		private boolean check;
 		private boolean trace;
@@ -210,6 +215,7 @@ public class CommandLineOptions
 		private List< String> libList;
 		private URL[] libURLs;
 		private JolieClassLoader jolieClassLoader;
+                private String programDirectory;
 
 		public CommandLineOptionsBuilder()
 		{
@@ -243,9 +249,9 @@ public class CommandLineOptions
 			return this;
 		}
 
-		public CommandLineOptionsBuilder correlationAlgorithm( String correlationAlgorithm )
+		public CommandLineOptionsBuilder correlationEngineType( CorrelationEngine.Type correlationEngineType )
 		{
-			this.correlationAlgorithm = correlationAlgorithm;
+			this.correlationEngineType = correlationEngineType;
 			return this;
 		}
 
@@ -295,14 +301,20 @@ public class CommandLineOptions
 		
 		
 
-		
-		public CommandLineOptionsBuilder correlationEngine(CorrelationEngine correlationEngine){
-		   this.correlationEngine = correlationEngine;
+				
+
+		public CommandLineOptionsBuilder correlationAlgorithmType (CorrelationEngine.Type correlationAlgorithmType){
+		   this.correlationEngineType = correlationAlgorithmType;
 		  return this;
 		}
+                
+                public CommandLineOptionsBuilder programDirectory( String programDirectory){
+                   this.programDirectory = programDirectory;
+                   return this;
+                }
 		
-		public CommandLineOptions build(){
-			return new CommandLineOptions(this);
+		public CommandLineOptionsType build(){
+			return new CommandLineOptionsType(this);
 		}
 
 		private void toUrlLibList() throws IOException

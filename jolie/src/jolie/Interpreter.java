@@ -112,7 +112,7 @@ public class Interpreter
 		private void onSuccessfulInitExecution()
 		{
 			if ( executionMode == Constants.ExecutionMode.SINGLE ) {
-				synchronized( correlationEngine ) {
+				synchronized( correlationEngine) {
 					try {
 						mainSession = new SessionThread( getDefinition( "main" ), initExecutionThread );
 						correlationEngine.onSingleExecutionSessionStart( mainSession );
@@ -244,7 +244,7 @@ public class Interpreter
 	private final Lock exitingLock;
 	private final Condition exitingCondition;
 	private final CorrelationEngine correlationEngine;
-	private final CommandLineOptions commandLineOptions;
+	private final CommandLineOptionsType commandLineOptions;
 	private final List< CorrelationSet> correlationSets = new ArrayList<>();
 	private final Map< String, CorrelationSet> operationCorrelationSetMap = new HashMap<>();
 	private Constants.ExecutionMode executionMode = Constants.ExecutionMode.SINGLE;
@@ -341,7 +341,7 @@ public class Interpreter
 
 	public CorrelationEngine correlationEngine()
 	{
-		return correlationEngine;
+		return this.correlationEngine;
 	}
 
 	private Timer timer()
@@ -867,17 +867,46 @@ public class Interpreter
 		this( args, parentClassLoader, programDirectory, false );
 	}
 
-	public Interpreter( CommandLineOptions commandLineOptions ) throws IOException
+	public Interpreter( CommandLineOptionsType commandLineOptions ) throws IOException
 	{
 		this.commandLineOptions = commandLineOptions;
 		
 		
 		commCore = new CommCore( this, commandLineOptions.connectionLimit() );
-
+  
 		logger.setLevel( commandLineOptions.log() );
+                this.correlationEngine =this.commandLineOptions.correlationEngine().createInstance(this);
+                
+                commCore = new CommCore( this, this.commandLineOptions.connectionLimit() /*, cmdParser.connectionsCache() */ );
+
+                
+                
+                		StringBuilder builder = new StringBuilder();
+		builder.append( '[' );
+		builder.append( programFilename );
+		builder.append( "] " );
+		logPrefix = builder.toString();
+
+		if ( this.commandLineOptions.trace() ) {
+			tracer = new PrintingTracer( this );
+		} else {
+			tracer = new DummyTracer();
+		}
+
+		logger.setLevel( this.commandLineOptions.log() );
 
 		exitingLock = new ReentrantLock();
 		exitingCondition = exitingLock.newCondition();
+
+		if ( this.commandLineOptions.programDirectory() == null ) {
+			this.programDirectory = programDirectory;
+		} else {
+			this.programDirectory = cmdParser.programDirectory();
+		}
+		if ( this.programDirectory == null ) {
+			throw new IOException( "Could not localize the service execution directory. This is probably a bug in the JOLIE interpreter, please report it to jolie-devel@lists.sf.net" );
+		}
+                
 
 	}
 
