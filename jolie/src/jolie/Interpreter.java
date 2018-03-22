@@ -5,8 +5,7 @@
  * ANY WARRANTY; without even the implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the * GNU General Public
  * License for more details. * * You should have received a copy of the GNU Library General Public * License along with this program; if
  * not, write to the * Free Software Foundation, Inc., * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * * For details about the
- * authors of this software, see the AUTHORS file. *
- **************************************************************************
+ * authors of this software, see the AUTHORS file. * *************************************************************************
  */
 package jolie;
 
@@ -112,7 +111,7 @@ public class Interpreter
 		private void onSuccessfulInitExecution()
 		{
 			if ( executionMode == Constants.ExecutionMode.SINGLE ) {
-				synchronized( correlationEngine) {
+				synchronized( correlationEngine ) {
 					try {
 						mainSession = new SessionThread( getDefinition( "main" ), initExecutionThread );
 						correlationEngine.onSingleExecutionSessionStart( mainSession );
@@ -249,7 +248,7 @@ public class Interpreter
 	private final Map< String, CorrelationSet> operationCorrelationSetMap = new HashMap<>();
 	private Constants.ExecutionMode executionMode = Constants.ExecutionMode.SINGLE;
 	private final Value globalValue = Value.createRootValue();
-	private final String[] arguments;
+	private  String[] arguments;
 	private final Collection< EmbeddedServiceLoader> embeddedServiceLoaders = new ArrayList<>();
 	private static final Logger logger = Logger.getLogger( "Jolie" );
 
@@ -861,32 +860,31 @@ public class Interpreter
 	 * @throws FileNotFoundException if one of the passed input files is not found.
 	 * @throws IOException if a Scanner constructor signals an error.
 	 */
-	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory )
+/*  public Interpreter(  CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, File programDirectory )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
-		this( args, parentClassLoader, programDirectory, false );
+		
+		this()
 	}
-
-	public Interpreter( CommandLineOptionsType commandLineOptions ) throws IOException
+*/
+	public Interpreter( CommandLineOptionsType commandLineOptions ,ClassLoader parentClassLoader, File programDirectory ) throws IOException
 	{
 		this.commandLineOptions = commandLineOptions;
-		
-		
-		commCore = new CommCore( this, commandLineOptions.connectionLimit() );
-  
-		logger.setLevel( commandLineOptions.log() );
-                this.correlationEngine =this.commandLineOptions.correlationEngine().createInstance(this);
-                
-                commCore = new CommCore( this, this.commandLineOptions.connectionLimit() /*, cmdParser.connectionsCache() */ );
 
-                
-                
-                		StringBuilder builder = new StringBuilder();
+		commCore = new CommCore( this, commandLineOptions.connectionLimit() );
+
+		logger.setLevel( commandLineOptions.log() );
+		this.correlationEngine = this.commandLineOptions.correlationEngine().createInstance( this );
+
+		commCore = new CommCore( this, this.commandLineOptions.connectionLimit() /*, cmdParser.connectionsCache() */ );
+        programFilename = this.commandLineOptions.programDirectory().getName();
+		
+		StringBuilder builder = new StringBuilder();
 		builder.append( '[' );
 		builder.append( programFilename );
 		builder.append( "] " );
 		logPrefix = builder.toString();
-
+         
 		if ( this.commandLineOptions.trace() ) {
 			tracer = new PrintingTracer( this );
 		} else {
@@ -901,16 +899,15 @@ public class Interpreter
 		if ( this.commandLineOptions.programDirectory() == null ) {
 			this.programDirectory = programDirectory;
 		} else {
-			this.programDirectory = cmdParser.programDirectory();
+			this.programDirectory = this.commandLineOptions.programDirectory();
 		}
 		if ( this.programDirectory == null ) {
 			throw new IOException( "Could not localize the service execution directory. This is probably a bug in the JOLIE interpreter, please report it to jolie-devel@lists.sf.net" );
 		}
-                
 
 	}
 
-	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, boolean ignoreFile )
+/*	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, boolean ignoreFile )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
 		this.parentClassLoader = parentClassLoader;
@@ -923,7 +920,7 @@ public class Interpreter
 
 		this.correlationEngine = cmdParser.correlationAlgorithmType().createInstance( this );
 
-		commCore = new CommCore( this, cmdParser.connectionsLimit() /*, cmdParser.connectionsCache() */ );
+		commCore = new CommCore( this, cmdParser.connectionsLimit()  );
 		includePaths = cmdParser.includePaths();
 
 		StringBuilder builder = new StringBuilder();
@@ -951,7 +948,7 @@ public class Interpreter
 		if ( this.programDirectory == null ) {
 			throw new IOException( "Could not localize the service execution directory. This is probably a bug in the JOLIE interpreter, please report it to jolie-devel@lists.sf.net" );
 		}
-	}
+	}*/
 
 	/**
 	 * Constructor.
@@ -964,14 +961,14 @@ public class Interpreter
 	 * @throws FileNotFoundException if one of the passed input files is not found.
 	 * @throws IOException if a Scanner constructor signals an error.
 	 */
-	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, Interpreter parentInterpreter, Program internalServiceProgram )
+/*	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, Interpreter parentInterpreter, Program internalServiceProgram )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
-		this( args, parentClassLoader, programDirectory, true );
+		//this( args, parentClassLoader, programDirectory, true );
 
 		this.parentInterpreter = parentInterpreter;
 		this.internalServiceProgram = internalServiceProgram;
-	}
+	}*/
 
 	/**
 	 * Returns the parent directory of the program executed by this Interpreter.

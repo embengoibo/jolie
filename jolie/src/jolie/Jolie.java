@@ -24,7 +24,6 @@ package jolie;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import jolie.lang.parse.ParserException;
-import jolie.CommandLineParser;
 
 
 /** Starter class of the Interpreter.
@@ -51,7 +50,7 @@ public class Jolie
 		try {
                       
                       
-                        final  CommandLineParser cmdParser = new CommandLineParser( args, Jolie.class.getClassLoader(), null );
+            final  CommandLineParser cmdParser = new CommandLineParser( args, Jolie.class.getClassLoader(), null );
 			final Interpreter interpreter = new Interpreter( args, Jolie.class.getClassLoader(), null );
 			Thread.currentThread().setContextClassLoader( interpreter.getClassLoader() );
 			Runtime.getRuntime().addShutdownHook( new Thread() {

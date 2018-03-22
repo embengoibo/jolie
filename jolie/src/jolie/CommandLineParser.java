@@ -376,11 +376,17 @@ public class CommandLineParser implements Closeable
 		int cLimit = -1;
 		int cCache = 100;
 		String pwd = new File( "" ).getCanonicalPath();
-		includeList.add( pwd );
-		includeList.add( "include" );
-		libList.add( pwd );
+	    CommandLineOptionsType.CommandLineOptionsBuilder builder = new CommandLineOptionsType.CommandLineOptionsBuilder(); 
+		builder.includeList( pwd );
+		builder.includeList( "include" );
+		//includeList.add( pwd );
+		//includeList.add( "include" );
+		builder.libList(pwd );
+		builder.libList( "ext");
+		builder.libList( "lib" );
+/*		libList.add( pwd );
 		libList.add( "ext" );
-		libList.add( "lib" );
+		libList.add( "lib" );*/
 		String olFilepath = null;
 		String japUrl = null;
 		int i = 0;
@@ -403,7 +409,8 @@ public class CommandLineParser implements Closeable
 				if ( japUrl != null ) {
 					argsList.set( i, argsList.get( i ).replace( "$JAP$", japUrl ) );
 				}
-				Collections.addAll( includeList, argsList.get( i ).split( jolie.lang.Constants.pathSeparator ) );
+				//Collections.addAll( includeList, argsList.get( i ).split( jolie.lang.Constants.pathSeparator ) );
+				builder.includeList(argsList.get( i ).split( jolie.lang.Constants.pathSeparator ) );
 				optionsList.add( argsList.get( i ) );
 			} else if ( "-l".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
@@ -412,17 +419,20 @@ public class CommandLineParser implements Closeable
 					argsList.set( i, argsList.get( i ).replace( "$JAP$", japUrl ) );
 				}
 				String[] tmp = argsList.get( i ).split( jolie.lang.Constants.pathSeparator );
-				Collections.addAll( libList, tmp );
+				builder.libList( tmp);
+				//Collections.addAll( libList, tmp );
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--connlimit".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
 				cLimit = Integer.parseInt( argsList.get( i ) );
+				builder.connectionLimit(cLimit);
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--conncache".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
 				cCache = Integer.parseInt( argsList.get( i ) );
+				builder.connectionsCache( cCache);
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--correlationAlgorithm".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );

@@ -56,7 +56,7 @@ public class CommandLineOptionsType
 	private final List< String> libList;
 	private final URL[] libURLs;
 	private final JolieClassLoader jolieClassLoader;
-        private final String programDirectory; 
+	private File programDirectory = null;
 
 	private CommandLineOptionsType( CommandLineOptionsBuilder builder )
 	{
@@ -75,8 +75,8 @@ public class CommandLineOptionsType
 		this.libList = builder.libList;
 		this.libURLs = builder.libURLs;
 		this.jolieClassLoader = builder.jolieClassLoader;
-                this.programDirectory = builder.programDirectory;
-		
+		this.programDirectory = builder.programDirectory;
+
 	}
 
 	public String commLimit()
@@ -188,10 +188,11 @@ public class CommandLineOptionsType
 	{
 		return libURLs;
 	}
-        
-        public String programDirectory (){
-          return this.programDirectory;
-        }
+
+	public File programDirectory()
+	{
+		return this.programDirectory;
+	}
 
 	public JolieClassLoader jolieClassLoader()
 	{
@@ -215,7 +216,7 @@ public class CommandLineOptionsType
 		private List< String> libList;
 		private URL[] libURLs;
 		private JolieClassLoader jolieClassLoader;
-                private String programDirectory;
+		private File programDirectory;
 
 		public CommandLineOptionsBuilder()
 		{
@@ -278,43 +279,53 @@ public class CommandLineOptionsType
 			this.log = log;
 			return this;
 		}
-		
-		public CommandLineOptionsBuilder charset ( String charset){
+
+		public CommandLineOptionsBuilder charset( String charset )
+		{
 			this.charset = charset;
 			return this;
 		}
-		
-		public CommandLineOptionsBuilder libList ( String libString){
-		 this.libList.add( libString );
-		 return this;
-		}
-		
-		public CommandLineOptionsBuilder libList ( String [] libList){
-		 Collections.addAll(this.libList , libList);
-		 return this;
-		}
-		
-		public CommandLineOptionsBuilder includeList (String[] includeList){
-		  Collections.addAll( this.includeList, includeList);
-		  return this;
-		}
-		
-		
 
-				
-
-		public CommandLineOptionsBuilder correlationAlgorithmType (CorrelationEngine.Type correlationAlgorithmType){
-		   this.correlationEngineType = correlationAlgorithmType;
-		  return this;
+		public CommandLineOptionsBuilder libList( String libString )
+		{
+			this.libList.add( libString );
+			return this;
 		}
-                
-                public CommandLineOptionsBuilder programDirectory( String programDirectory){
-                   this.programDirectory = programDirectory;
-                   return this;
-                }
+
+		public CommandLineOptionsBuilder libList( String[] libList )
+		{
+			Collections.addAll( this.libList, libList );
+			return this;
+		}
+
+		public CommandLineOptionsBuilder includeList( String[] includeList )
+		{
+			Collections.addAll( this.includeList, includeList );
+			return this;
+		}
 		
-		public CommandLineOptionsType build(){
-			return new CommandLineOptionsType(this);
+		
+	    public CommandLineOptionsBuilder includeList( String includeList )
+		{
+			this.includeList.add( includeList);
+			return this;
+		}
+
+		public CommandLineOptionsBuilder correlationAlgorithmType( CorrelationEngine.Type correlationAlgorithmType )
+		{
+			this.correlationEngineType = correlationAlgorithmType;
+			return this;
+		}
+
+		public CommandLineOptionsBuilder programDirectory( File programDirectory )
+		{
+			this.programDirectory = programDirectory;
+			return this;
+		}
+
+		public CommandLineOptionsType build()
+		{
+			return new CommandLineOptionsType( this );
 		}
 
 		private void toUrlLibList() throws IOException
