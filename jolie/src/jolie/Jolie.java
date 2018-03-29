@@ -51,7 +51,8 @@ public class Jolie
                       
                       
             final  CommandLineParser cmdParser = new CommandLineParser( args, Jolie.class.getClassLoader(), null );
-			final Interpreter interpreter = new Interpreter( args, Jolie.class.getClassLoader(), null );
+			final  CommandLineOptionsType cmdParOptionsType = cmdParser.commandLineOptions();
+			final Interpreter interpreter = new Interpreter( cmdParOptionsType, Jolie.class.getClassLoader(), null );
 			Thread.currentThread().setContextClassLoader( interpreter.getClassLoader() );
 			Runtime.getRuntime().addShutdownHook( new Thread() {
 				@Override

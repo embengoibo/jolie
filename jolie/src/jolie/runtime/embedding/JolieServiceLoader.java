@@ -33,7 +33,7 @@ import jolie.runtime.expression.Expression;
 public class JolieServiceLoader extends EmbeddedServiceLoader
 {
 	private final static Pattern servicePathSplitPattern = Pattern.compile( " " );
-	private final Interpreter interpreter;
+	private  Interpreter interpreter;
 	
 	public JolieServiceLoader( Expression channelDest, Interpreter currInterpreter, String servicePath )
 		throws IOException, CommandLineException
@@ -47,11 +47,11 @@ public class JolieServiceLoader extends EmbeddedServiceLoader
 		newArgs[1] = currInterpreter.programDirectory().getAbsolutePath();
 		System.arraycopy( options, 0, newArgs, 2, options.length );
 		System.arraycopy( ss, 0, newArgs, 2 + options.length, ss.length );
-		interpreter = new Interpreter(
+	/*	interpreter = new Interpreter(
 			newArgs,
 			currInterpreter.getClassLoader(),
 			currInterpreter.programDirectory()
-		);
+		);*/
 	}
 
 	public void load()

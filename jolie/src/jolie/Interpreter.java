@@ -853,7 +853,7 @@ public class Interpreter
 	/**
 	 * Constructor.
 	 *
-	 * @param args The command line arguments.
+	 * @param commandLineOptions The command line arguments.
 	 * @param parentClassLoader the parent ClassLoader to fall back when not finding resources.
 	 * @param programDirectory the program directory of this Interpreter, necessary if it is run inside a JAP file.
 	 * @throws CommandLineException if the command line is not valid or asks for simple information. (like --help and --version)
@@ -895,7 +895,8 @@ public class Interpreter
 
 		exitingLock = new ReentrantLock();
 		exitingCondition = exitingLock.newCondition();
-
+        classLoader = this.commandLineOptions.classLoader();
+		arguments = (String[]) this.commandLineOptions.programArgumentsList().toArray( new String [this.commandLineOptions.programArgumentsList().size()]);
 		if ( this.commandLineOptions.programDirectory() == null ) {
 			this.programDirectory = programDirectory;
 		} else {
@@ -1302,8 +1303,9 @@ public class Interpreter
 	{
 		try {
 			Program program;
-			if ( cmdParser.isProgramCompiled() ) {
-				final ObjectInputStream istream = new ObjectInputStream( cmdParser.programStream() );
+			
+			if ( commandLineOptions.isProgramCompiled() ) {
+				final ObjectInputStream istream = new ObjectInputStream( commandLineOptions.programStream() );
 				final Object o = istream.readObject();
 				if ( o instanceof Program ) {
 					program = (Program) o;
@@ -1314,17 +1316,17 @@ public class Interpreter
 				if ( this.internalServiceProgram != null ) {
 					program = this.internalServiceProgram;
 				} else {
-					final OLParser olParser = new OLParser( new Scanner( cmdParser.programStream(), cmdParser.programFilepath().toURI(), cmdParser.charset() ), includePaths, classLoader );
+					final OLParser olParser = new OLParser( new Scanner( commandLineOptions.programStream(), commandLineOptions.programFilepath().toURI(), commandLineOptions.charset() ), commandLineOptions.includePaths(), commandLineOptions.classLoader() );
 
-					olParser.putConstants( cmdParser.definedConstants() );
+					olParser.putConstants( commandLineOptions.definedConstants() );
 					program = olParser.parse();
 				}
 				program = OLParseTreeOptimizer.optimize( program );
 			}
 
-			cmdParser.close();
+			commandLineOptions.close();
 
-			check = cmdParser.check();
+			check =  commandLineOptions.check();
 
 			final SemanticVerifier semanticVerifier;
 
@@ -1343,7 +1345,7 @@ public class Interpreter
 				throw new InterpreterException( "Exiting" );
 			}
 
-			if ( cmdParser.typeCheck() ) {
+			if (  commandLineOptions.typeCheck() ) {
 				TypeChecker typeChecker = new TypeChecker(
 					program,
 					semanticVerifier.executionMode(),

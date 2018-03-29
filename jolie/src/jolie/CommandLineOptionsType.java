@@ -18,9 +18,17 @@
  */
 package jolie;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import jolie.jap.JapURLConnection;
 import jolie.lang.Constants;
 import jolie.lang.parse.Scanner.Token;
 import jolie.runtime.correlation.CorrelationEngine;
@@ -38,7 +47,7 @@ import jolie.runtime.correlation.CorrelationEngine;
  *
  * @author maschio
  */
-public class CommandLineOptionsType
+public class CommandLineOptionsType implements Closeable
 {
 
 	private final String commLimit;
@@ -46,6 +55,7 @@ public class CommandLineOptionsType
 	private final int connectionLimit;
 	private final int connectionsCache;
 	private final CorrelationEngine.Type correlationEngineType;
+	private final String csetAlgorithmName = "simple";
 	private final boolean typeCheck;
 	private final boolean check;
 	private final boolean trace;
@@ -55,8 +65,17 @@ public class CommandLineOptionsType
 	private final Deque< String> includeList;
 	private final List< String> libList;
 	private final URL[] libURLs;
+	private final ClassLoader parentClassLoader;
 	private final JolieClassLoader jolieClassLoader;
-	private File programDirectory = null;
+	private final File programDirectory;
+	private final List< String> programArgumentsList;
+	private final String olFilepath = null;
+	private final boolean ignoreFile = false;
+	private final String source;
+	private final InputStream programStream;
+	private final boolean isProgramCompiled;
+	private final File programFilepath;
+	private final String[] includePaths;
 
 	private CommandLineOptionsType( CommandLineOptionsBuilder builder )
 	{
@@ -76,12 +95,46 @@ public class CommandLineOptionsType
 		this.libURLs = builder.libURLs;
 		this.jolieClassLoader = builder.jolieClassLoader;
 		this.programDirectory = builder.programDirectory;
+		this.parentClassLoader = builder.parentClassLoader;
+		this.programArgumentsList = builder.programArgumentsList;
+		this.source = builder.source;
+		this.programStream = builder.programStream;
+		this.isProgramCompiled = builder.isProgramCompiled;
+		this.programFilepath = builder.programFilepath;
+		this.includePaths = builder.includePaths;
 
+	}
+	
+	
+	
+	public List<String> programArgumentsList(){
+	   return this.programArgumentsList;
 	}
 
 	public String commLimit()
 	{
 		return this.commLimit;
+	}
+	
+	
+	public InputStream programStream(){
+	  return this.programStream;
+	}
+	
+	public String[] includePaths(){
+	   return this.includePaths;
+	}
+	public File programFilepath(){
+	  
+		return this.programFilepath;
+	
+	}
+	public JolieClassLoader classLoader(){
+	  return this.jolieClassLoader;
+	}
+	
+	public Map<String, Token> definedConstants(){
+	  return this.constants;
 	}
 
 	public boolean hasConnCache()
@@ -132,6 +185,12 @@ public class CommandLineOptionsType
 	public String charset()
 	{
 		return this.charset;
+	}
+
+	public boolean isProgramCompiled()
+	{
+		return this.isProgramCompiled;
+
 	}
 
 	public void constant( String id, Token token )
@@ -199,6 +258,14 @@ public class CommandLineOptionsType
 		return this.jolieClassLoader;
 	}
 
+	@Override
+	public void close() throws IOException
+	{
+		programStream.close();
+	}
+
+
+
 	public static class CommandLineOptionsBuilder
 	{
 		private String commLimit;
@@ -206,6 +273,7 @@ public class CommandLineOptionsType
 		private int connectionLimit;
 		private int connectionsCache;
 		private CorrelationEngine.Type correlationEngineType;
+		private String csetAlgorithmName = "simple";
 		private boolean typeCheck;
 		private boolean check;
 		private boolean trace;
@@ -215,20 +283,36 @@ public class CommandLineOptionsType
 		private Deque< String> includeList;
 		private List< String> libList;
 		private URL[] libURLs;
+		private ClassLoader parentClassLoader;
 		private JolieClassLoader jolieClassLoader;
 		private File programDirectory;
+		private List< String> programArgumentsList;
+		private String olFilepath = null;
+		private boolean ignoreFile = false;
+		private String source;
+		private InputStream programStream;
+		private boolean isProgramCompiled;
+		private File programFilepath;
+		private String[] includePaths;
 
 		public CommandLineOptionsBuilder()
 		{
 			constants = new HashMap<>();
 			includeList = new LinkedList<>();
 			libList = new LinkedList<>();
+			programArgumentsList = new ArrayList<>();
 
 		}
 
 		public CommandLineOptionsBuilder commLimit( String commLimit )
 		{
 			this.commLimit = commLimit;
+			return this;
+		}
+
+		public CommandLineOptionsBuilder constants( String id, Token token )
+		{
+			this.constants.put( id, token );
 			return this;
 		}
 
@@ -303,11 +387,10 @@ public class CommandLineOptionsType
 			Collections.addAll( this.includeList, includeList );
 			return this;
 		}
-		
-		
-	    public CommandLineOptionsBuilder includeList( String includeList )
+
+		public CommandLineOptionsBuilder includeList( String includeList )
 		{
-			this.includeList.add( includeList);
+			this.includeList.add( includeList );
 			return this;
 		}
 
@@ -323,9 +406,139 @@ public class CommandLineOptionsType
 			return this;
 		}
 
-		public CommandLineOptionsType build()
+		public void programArgumentsList( String programArgument )
 		{
+			programArgumentsList.add( programArgument );
+		}
+
+		public void olFilepath( String olFilepath )
+		{
+			this.olFilepath = olFilepath;
+		}
+
+		public boolean hasOlFilepath()
+		{
+
+			return olFilepath != null;
+
+		}
+
+		public void csetAlgorithmName( String csetAlgorithmName )
+		{
+			this.csetAlgorithmName = csetAlgorithmName;
+		}
+
+		public void parentClassLoader( ClassLoader parentClassLoader )
+		{
+			this.parentClassLoader = parentClassLoader;
+		}
+
+		public CommandLineOptionsType build() throws IOException, CommandLineException
+		{
+			correlationEngine();
+			toUrlLibList();
+
+			if ( olFilepath == null && !ignoreFile ) {
+				throw new CommandLineException( "Input file not specified." );
+			}
+
+			jolieClassLoader = new JolieClassLoader( libURLs, parentClassLoader );
+
+			openStrean();
+
+			if ( this.programStream == null ) {
+				if ( ignoreFile ) {
+					this.source = olFilepath;
+					this.programStream = new ByteArrayInputStream( new byte[]{} );
+				} else if ( olFilepath.endsWith( ".ol" ) ) {
+					// try to read the compiled version of the ol file
+					olFilepath += "c";
+					openStrean();
+					if ( this.programStream == null ) {
+						throw new FileNotFoundException( olFilepath );
+					}
+				} else {
+					throw new FileNotFoundException( olFilepath );
+				}
+			}
+			isProgramCompiled = olFilepath.endsWith( ".olc" );
+			trace = trace && !isProgramCompiled;
+			check = check && !isProgramCompiled;
+			programFilepath = new File( this.source );
+			includePaths = includeList.toArray( new String[]{} );
 			return new CommandLineOptionsType( this );
+		}
+
+		private void correlationEngine() throws CommandLineException
+		{
+			correlationEngineType = CorrelationEngine.Type.fromString( csetAlgorithmName );
+			if ( correlationEngineType == null ) {
+				throw new CommandLineException( "Unrecognized correlation algorithm: " + csetAlgorithmName );
+			}
+		}
+
+		private void openStrean() throws FileNotFoundException, IOException
+		{
+
+			URL olURL = null;
+			File f = new File( olFilepath ).getAbsoluteFile();
+			if ( f.exists() ) {
+				this.programStream = new FileInputStream( f );
+				this.source = f.toURI().getSchemeSpecificPart();
+				programDirectory = f.getParentFile();
+			} else {
+				for( String includePath : includeList ) {
+					f = new File(
+						includePath
+						+ jolie.lang.Constants.fileSeparator
+						+ olFilepath
+					);
+					if ( f.exists() ) {
+						f = f.getAbsoluteFile();
+						this.programStream = new FileInputStream( f );
+						this.source = f.toURI().getSchemeSpecificPart();
+						programDirectory = f.getParentFile();
+						break;
+					}
+				}
+
+				if ( this.programStream == null ) {
+					try {
+						olURL = new URL( olFilepath );
+						this.programStream = olURL.openStream();
+						this.source = olFilepath;
+						if ( this.programStream == null ) {
+							throw new MalformedURLException();
+						}
+					} catch( MalformedURLException e ) {
+						olURL = jolieClassLoader.getResource( olFilepath );
+						if ( olURL != null ) {
+							this.programStream = olURL.openStream();
+							this.source = olFilepath;
+						}
+					}
+					if ( programDirectory == null && olURL != null && olURL.getPath() != null ) {
+						// Try to extract the parent directory of the JAP/JAR library file
+						try {
+							File urlFile = new File( JapURLConnection.nestingSeparatorPattern.split( new URI( olURL.getPath() ).getSchemeSpecificPart() )[ 0 ] ).getAbsoluteFile();
+							if ( urlFile.exists() ) {
+								programDirectory = urlFile.getParentFile();
+							}
+						} catch( URISyntaxException e ) {
+						}
+					}
+				}
+			}
+			if ( this.programStream != null ) {
+				if ( f.exists() && f.getParent() != null ) {
+					includeList.addFirst( f.getParent() );
+				} else if ( olURL != null ) {
+					String urlString = olURL.toString();
+					includeList.addFirst( urlString.substring( 0, urlString.lastIndexOf( '/' ) + 1 ) );
+				}
+
+				this.programStream = new BufferedInputStream( this.programStream );
+			}
 		}
 
 		private void toUrlLibList() throws IOException

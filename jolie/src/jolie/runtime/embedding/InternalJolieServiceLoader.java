@@ -31,7 +31,7 @@ import jolie.runtime.expression.Expression;
 
 public class InternalJolieServiceLoader extends EmbeddedServiceLoader
 {
-	private final Interpreter interpreter;
+	private  Interpreter interpreter;
 	
 	public InternalJolieServiceLoader( Expression channelDest, Interpreter currInterpreter, String serviceName, Program program)
 		throws IOException, CommandLineException
@@ -45,13 +45,13 @@ public class InternalJolieServiceLoader extends EmbeddedServiceLoader
 		String[] options = currInterpreter.optionArgs();
 		newArgs.addAll( Arrays.asList( options ) );
         newArgs.add( "#" + serviceName + ".ol" );
-		interpreter = new Interpreter(
+/*		interpreter = new Interpreter(
 			newArgs.toArray( new String[ newArgs.size() ] ),
 			currInterpreter.getClassLoader(),
 			currInterpreter.programDirectory(),
 			currInterpreter,
             program
-		);
+		);*/
 	}
 
 	public void load()
