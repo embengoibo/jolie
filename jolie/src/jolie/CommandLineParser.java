@@ -415,6 +415,7 @@ public class CommandLineParser implements Closeable
 			} else if ( "--connlimit".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
+				cLimit
 				builder.connectionLimit( Integer.parseInt( argsList.get( i ) ) );
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--conncache".equals( argsList.get( i ) ) ) {
