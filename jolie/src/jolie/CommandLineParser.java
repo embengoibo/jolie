@@ -381,6 +381,7 @@ public class CommandLineParser implements Closeable
 		String japUrl = null;
 		int i = 0;
 		// First parse Jolie arguments with the Jolie program argument
+		builder.parentClassLoader( parentClassLoader );
 		for( ; i < argsList.size() && olFilepath == null; i++ ) {
 			if ( "--help".equals( argsList.get( i ) ) || "-h".equals( argsList.get( i ) ) ) {
 				throw new CommandLineException( getHelpString() );
@@ -415,13 +416,13 @@ public class CommandLineParser implements Closeable
 			} else if ( "--connlimit".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
-				cLimit
-				builder.connectionLimit( Integer.parseInt( argsList.get( i ) ) );
+				cLimit = Integer.parseInt( argsList.get( i ));
+				
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--conncache".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
-				builder.connectionsCache( Integer.parseInt( argsList.get( i ) ) );
+				cCache = Integer.parseInt( argsList.get( i ) );
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--correlationAlgorithm".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
@@ -521,6 +522,9 @@ public class CommandLineParser implements Closeable
 			programArgumentsList.add( argsList.get( i ) );
 			builder.programArgumentsList( argsList.get( i ) );
 		}
+		
+		builder.connectionLimit( cLimit);
+		builder.connectionsCache( cCache );
 
 /*		typeCheck = bTypeCheck;
 		logLevel = lLogLevel;
