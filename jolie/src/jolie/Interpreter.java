@@ -907,6 +907,7 @@ public class Interpreter
 		}
 
 	}
+	
 
 /*	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, boolean ignoreFile )
 		throws CommandLineException, FileNotFoundException, IOException
@@ -962,14 +963,23 @@ public class Interpreter
 	 * @throws FileNotFoundException if one of the passed input files is not found.
 	 * @throws IOException if a Scanner constructor signals an error.
 	 */
-/*	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, Interpreter parentInterpreter, Program internalServiceProgram )
+	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, Interpreter parentInterpreter, Program internalServiceProgram )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
-		//this( args, parentClassLoader, programDirectory, true );
+		this( parentInterpreter.commandLineOptions, parentClassLoader, programDirectory);
 
 		this.parentInterpreter = parentInterpreter;
 		this.internalServiceProgram = internalServiceProgram;
-	}*/
+	}
+	
+	/**
+	 * @return the parent directory of the program executed by this Interpreter.
+	 */
+	
+	public CommandLineOptionsType commandLineOptions(){
+	   return this.commandLineOptions;
+	}
+	
 
 	/**
 	 * Returns the parent directory of the program executed by this Interpreter.

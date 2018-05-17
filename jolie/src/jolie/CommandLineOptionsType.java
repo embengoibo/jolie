@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -257,11 +258,47 @@ public class CommandLineOptionsType implements Closeable
 	{
 		return this.jolieClassLoader;
 	}
+	
+
+	
+	public CommandLineOptionsType cloneCommandLineOptionsType (String olFilePath) throws CloneNotSupportedException{
+	   CommandLineOptionsBuilder commandLineOptionsBuilder = new CommandLineOptionsBuilder();
+	   commandLineOptionsBuilder.charset( this.charset);
+	   commandLineOptionsBuilder.check( this.check );
+	   commandLineOptionsBuilder.commLimit( this.commLimit);
+	   commandLineOptionsBuilder.connectionLimit( this.connectionLimit);
+	   commandLineOptionsBuilder.connectionsCache( this.connectionsCache);
+	   commandLineOptionsBuilder.correlationAlgorithmType( this.correlationEngineType );
+	   commandLineOptionsBuilder.correlationEngineType( this.correlationEngineType);
+	   commandLineOptionsBuilder.csetAlgorithmName( this.csetAlgorithmName );
+       commandLineOptionsBuilder.includeList( this.includePaths);
+	   Iterator<Map.Entry<String, Token>> iterator = this.constants.entrySet().iterator();
+	   while ( iterator.hasNext()){
+			Map.Entry<String, Token> entry = iterator.next();
+			commandLineOptionsBuilder.constants( entry.getKey(), entry.getValue() );
+	   } 
+	   for (String lib : this.libList){
+	    commandLineOptionsBuilder.libList( lib );
+	   }
+	   commandLineOptionsBuilder.log( this.log);
+	   commandLineOptionsBuilder.trace(this.trace);
+	   commandLineOptionsBuilder.olFilepath( olFilePath );
+	   
+		try {
+			return commandLineOptionsBuilder.build();
+		} catch( IOException ex ) {
+			throw (new CloneNotSupportedException());
+		} catch( CommandLineException ex ) {
+			throw (new CloneNotSupportedException());
+		}
+		   
+	
+	}
 
 	@Override
 	public void close() throws IOException
 	{
-		programStream.close();
+		
 	}
 
 

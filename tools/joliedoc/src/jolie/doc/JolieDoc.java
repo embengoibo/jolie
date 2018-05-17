@@ -43,12 +43,12 @@ public class JolieDoc
 			SemanticVerifier.Configuration configuration = new SemanticVerifier.Configuration();
 			configuration.setCheckForMain( false );
 			Program program = ParsingUtils.parseProgram(
-				cmdParser.programStream(),
-				cmdParser.programFilepath().toURI(),
-				cmdParser.charset(),
-				cmdParser.includePaths(), 
-				cmdParser.jolieClassLoader(), 
-				cmdParser.definedConstants(),
+				cmdParser.commandLineOptions().programStream(),
+				cmdParser.commandLineOptions().programFilepath().toURI(),
+				cmdParser.commandLineOptions().charset(),
+				cmdParser.commandLineOptions().includePaths(), 
+				cmdParser.commandLineOptions().jolieClassLoader(), 
+				cmdParser.commandLineOptions().definedConstants(),
 				configuration
 			);			
 			

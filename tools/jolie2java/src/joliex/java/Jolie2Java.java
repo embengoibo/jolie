@@ -5,8 +5,6 @@
 package joliex.java;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jolie.CommandLineException;
 
 import jolie.lang.parse.ParserException;
@@ -35,9 +33,9 @@ public class Jolie2Java {
             Jolie2JavaCommandLineParser cmdParser = Jolie2JavaCommandLineParser.create(args, Jolie2Java.class.getClassLoader());
 
             Program program = ParsingUtils.parseProgram(
-                    cmdParser.programStream(),
-                    cmdParser.programFilepath().toURI(), cmdParser.charset(),
-                    cmdParser.includePaths(), cmdParser.jolieClassLoader(), cmdParser.definedConstants());
+                    cmdParser.commandLineOptions().programStream(),
+                    cmdParser.commandLineOptions().programFilepath().toURI(), cmdParser.commandLineOptions().charset(),
+                    cmdParser.commandLineOptions().includePaths(), cmdParser.commandLineOptions().jolieClassLoader(), cmdParser.commandLineOptions().definedConstants());
 
             //Program program = parser.parse();
             ProgramInspector inspector = ParsingUtils.createInspector(program);

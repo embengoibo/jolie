@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jolie.CommandLineException;
 import jolie.CommandLineParser;
 import jolie.lang.parse.ParserException;
@@ -49,22 +51,30 @@ public class Compiler
 	public void compile( OutputStream ostream )
 		throws IOException, ParserException, SemanticException
 	{
-		Program program = ParsingUtils.parseProgram(
-			cmdParser.programStream(),
-			cmdParser.programFilepath().toURI(), cmdParser.charset(),
-			cmdParser.includePaths(), cmdParser.jolieClassLoader(), cmdParser.definedConstants()
-		);
-		//GZIPOutputStream gzipstream = new GZIPOutputStream( ostream );
-		ObjectOutputStream oos = new ObjectOutputStream( ostream );
-		oos.writeObject( program );
-		ostream.flush();
-		ostream.close();
-		//gzipstream.close();
+		try {
+			Program program = ParsingUtils.parseProgram(
+				cmdParser.commandLineOptions().programStream(),
+				cmdParser.commandLineOptions().programFilepath().toURI(), cmdParser.commandLineOptions().charset(),
+				cmdParser.commandLineOptions().includePaths(), cmdParser.commandLineOptions().jolieClassLoader(), cmdParser.commandLineOptions().definedConstants()
+			);
+			//GZIPOutputStream gzipstream = new GZIPOutputStream( ostream );
+			ObjectOutputStream oos = new ObjectOutputStream( ostream );
+			oos.writeObject( program );
+			ostream.flush();
+			ostream.close();
+			//gzipstream.close();
+		} catch( CommandLineException ex ) {
+			Logger.getLogger( Compiler.class.getName() ).log( Level.SEVERE, null, ex );
+		}
 	}
 	
 	public void compile()
 		throws IOException, ParserException, SemanticException
 	{
-		compile( new FileOutputStream( cmdParser.programFilepath() + "c" ) );
+		try {
+			compile( new FileOutputStream( cmdParser.commandLineOptions().programFilepath().getAbsolutePath() + "c" ) );
+		} catch( CommandLineException ex ) {
+			Logger.getLogger( Compiler.class.getName() ).log( Level.SEVERE, null, ex );
+		}
 	}
 }

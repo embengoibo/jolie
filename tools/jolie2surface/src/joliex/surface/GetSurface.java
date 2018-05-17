@@ -55,13 +55,13 @@ public class GetSurface
 			}
 			CommandLineParser cmdParser = new CommandLineParser( args, GetSurface.class.getClassLoader() );
 			Program program = ParsingUtils.parseProgram(
-				cmdParser.programStream(),
-				cmdParser.programFilepath().toURI(), cmdParser.charset(),
-				cmdParser.includePaths(), cmdParser.jolieClassLoader(), cmdParser.definedConstants() );
+				cmdParser.commandLineOptions().programStream(),
+				cmdParser.commandLineOptions().programFilepath().toURI(), cmdParser.commandLineOptions().charset(),
+				cmdParser.commandLineOptions().includePaths(), cmdParser.commandLineOptions().jolieClassLoader(), cmdParser.commandLineOptions().definedConstants() );
 			ProgramInspector inspector = ParsingUtils.createInspector( program );
 			SurfaceCreator document = new SurfaceCreator( inspector, program.context().source() );
                        
-			document.ConvertDocument( cmdParser.arguments()[0], noOutputPort, noLocation, noProtocol );
+			//document.ConvertDocument( cmdParser.arguments()[0], noOutputPort, noLocation, noProtocol );
 
 		} catch( CommandLineException ex ) {
 			Logger.getLogger( GetSurface.class.getName() ).log( Level.SEVERE, null, ex );

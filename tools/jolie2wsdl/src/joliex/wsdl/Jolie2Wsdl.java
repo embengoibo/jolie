@@ -22,12 +22,12 @@ public class Jolie2Wsdl {
     public static void main(String[] args) {
         try {
             Jolie2WsdlCommandLineParser cmdParser = Jolie2WsdlCommandLineParser.create(args, Jolie2Wsdl.class.getClassLoader());
-            args = cmdParser.arguments();
+           // args = cmdParser.arguments();
 
             Program program = ParsingUtils.parseProgram(
-                    cmdParser.programStream(),
-                    cmdParser.programFilepath().toURI(), cmdParser.charset(),
-                    cmdParser.includePaths(), cmdParser.jolieClassLoader(), cmdParser.definedConstants());
+                    cmdParser.commandLineOptions().programStream(),
+                    cmdParser.commandLineOptions().programFilepath().toURI(), cmdParser.commandLineOptions().charset(),
+                    cmdParser.commandLineOptions().includePaths(),cmdParser.commandLineOptions().jolieClassLoader(), cmdParser.commandLineOptions().definedConstants());
 
             //Program program = parser.parse();
             ProgramInspector inspector = ParsingUtils.createInspector(program);

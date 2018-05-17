@@ -21,7 +21,6 @@
 
 package joliex.plasma;
 
-import joliex.plasma.impl.InterfaceVisitor;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +33,7 @@ import jolie.lang.parse.ParserException;
 import jolie.lang.parse.SemanticException;
 import jolie.lang.parse.ast.Program;
 import jolie.lang.parse.util.ParsingUtils;
+import joliex.plasma.impl.InterfaceVisitor;
 
 /**
  *
@@ -45,17 +45,17 @@ public class Jolie2Plasma
 	{
 		try {
 			CommandLineParser cmdParser = new CommandLineParser( args, Jolie2Plasma.class.getClassLoader() );
-			args = cmdParser.arguments();
+		/*	args = cmdParser.arguments();
 			if ( args.length < 2 ) {
 				throw new CommandLineException( "Insufficient number of arguments" );
 			}
-
+         */
 			Writer writer = new BufferedWriter( new FileWriter( args[0] ) );
 
 			Program program = ParsingUtils.parseProgram(
-				cmdParser.programStream(),
-				cmdParser.programFilepath().toURI(), cmdParser.charset(),
-				cmdParser.includePaths(), cmdParser.jolieClassLoader(), cmdParser.definedConstants()
+				cmdParser.commandLineOptions().programStream(),
+				cmdParser.commandLineOptions().programFilepath().toURI(), cmdParser.commandLineOptions().charset(),
+				cmdParser.commandLineOptions().includePaths(), cmdParser.commandLineOptions().jolieClassLoader(), cmdParser.commandLineOptions().definedConstants()
 			);
 			new InterfaceConverter(
 				program,

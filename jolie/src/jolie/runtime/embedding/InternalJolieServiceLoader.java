@@ -44,6 +44,7 @@ public class InternalJolieServiceLoader extends EmbeddedServiceLoader
 		
 		String[] options = currInterpreter.optionArgs();
 		newArgs.addAll( Arrays.asList( options ) );
+
         newArgs.add( "#" + serviceName + ".ol" );
 /*		interpreter = new Interpreter(
 			newArgs.toArray( new String[ newArgs.size() ] ),

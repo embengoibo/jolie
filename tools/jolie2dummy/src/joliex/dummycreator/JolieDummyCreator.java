@@ -42,11 +42,11 @@ public class JolieDummyCreator {
 	public static void main(String[] args) {
 		try{
 			JolieDummyCommandLineParser cmdParser= JolieDummyCommandLineParser.create( args, JolieDummyCommandLineParser.class.getClassLoader() );
-			Program program = ParsingUtils.parseProgram( cmdParser.programStream(),
-			cmdParser.programFilepath().toURI(), cmdParser.charset(),
-			cmdParser.includePaths(), cmdParser.jolieClassLoader(), cmdParser.definedConstants());
+			Program program = ParsingUtils.parseProgram( cmdParser.commandLineOptions().programStream(),
+			cmdParser.commandLineOptions().programFilepath().toURI(), cmdParser.commandLineOptions().charset(),
+			cmdParser.commandLineOptions().includePaths(), cmdParser.commandLineOptions().jolieClassLoader(), cmdParser.commandLineOptions().definedConstants());
 			ProgramInspector inspector=ParsingUtils.createInspector( program );
-			JolieDummyDocumentCreator document= new JolieDummyDocumentCreator( inspector,cmdParser.programFilepath());
+			JolieDummyDocumentCreator document= new JolieDummyDocumentCreator( inspector,cmdParser.commandLineOptions().programFilepath());
 			document.createDocument();
 		} catch( CommandLineException e ) {
 			System.out.println( e.getMessage() );
