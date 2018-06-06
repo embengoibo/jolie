@@ -19,11 +19,11 @@
 package jolie.runtime.embedding;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jolie.CommandLineException;
+import jolie.CommandLineOptionsType;
 import jolie.Interpreter;
 import jolie.lang.parse.ast.Program;
 import jolie.runtime.expression.Expression;
@@ -38,21 +38,25 @@ public class InternalJolieServiceLoader extends EmbeddedServiceLoader
 	{
 		super( channelDest );
         
-		List< String > newArgs = new LinkedList< String >();
-		newArgs.add( "-i" );
-		newArgs.add( currInterpreter.programDirectory().getAbsolutePath() );
-		
-		String[] options = currInterpreter.optionArgs();
-		newArgs.addAll( Arrays.asList( options ) );
-
-        newArgs.add( "#" + serviceName + ".ol" );
-/*		interpreter = new Interpreter(
-			newArgs.toArray( new String[ newArgs.size() ] ),
-			currInterpreter.getClassLoader(),
-			currInterpreter.programDirectory(),
-			currInterpreter,
-            program
-		);*/
+		try {
+			/*	List< String > newArgs = new LinkedList< String >();
+			newArgs.add( "-i" );
+			newArgs.add( currInterpreter.programDirectory().getAbsolutePath() );
+			
+			
+			//newArgs.addAll(currInterpreter.commandLineOptions().programArgumentsList()  );
+			
+			
+			newArgs.add( "#" + serviceName + ".ol" );*/
+			String nameFileService = "#" + serviceName + ".ol";
+			
+			CommandLineOptionsType commandLineOptions = currInterpreter.commandLineOptions().cloneCommandLineOptionsType( nameFileService, currInterpreter.programDirectory().getAbsolutePath());
+			
+			interpreter = new Interpreter(commandLineOptions, currInterpreter.getClassLoader(), null );
+		} catch( CloneNotSupportedException ex ) {
+			Logger.getLogger( InternalJolieServiceLoader.class.getName() ).log( Level.SEVERE, null, ex );
+		}
+			
 	}
 
 	public void load()
