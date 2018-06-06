@@ -259,6 +259,8 @@ public class CommandLineOptionsType implements Closeable
 		return this.jolieClassLoader;
 	}
 	
+	
+	
 
 	
 	public CommandLineOptionsType cloneCommandLineOptionsType (String olFilePath) throws CloneNotSupportedException{
@@ -295,7 +297,7 @@ public class CommandLineOptionsType implements Closeable
 	
 	}
 	
-	public CommandLineOptionsType cloneCommandLineOptionsType (String olFilePath, String includePath) throws CloneNotSupportedException{
+	public CommandLineOptionsType cloneCommandLineOptionsType (String olFilePath, String includePath ) throws CloneNotSupportedException{
 	   CommandLineOptionsBuilder commandLineOptionsBuilder = new CommandLineOptionsBuilder();
 	   commandLineOptionsBuilder.charset( this.charset);
 	   commandLineOptionsBuilder.check( this.check );
@@ -307,6 +309,9 @@ public class CommandLineOptionsType implements Closeable
 	   commandLineOptionsBuilder.csetAlgorithmName( this.csetAlgorithmName );
        commandLineOptionsBuilder.includeList( this.includePaths);
 	   commandLineOptionsBuilder.includeList( includePath );
+	   commandLineOptionsBuilder.programStream(this.programStream);
+	   commandLineOptionsBuilder.source(this.source);
+	   commandLineOptionsBuilder.programDirectory(this.programDirectory);
 	   Iterator<Map.Entry<String, Token>> iterator = this.constants.entrySet().iterator();
 	   while ( iterator.hasNext()){
 			Map.Entry<String, Token> entry = iterator.next();
@@ -317,7 +322,11 @@ public class CommandLineOptionsType implements Closeable
 	   }
 	   commandLineOptionsBuilder.log( this.log);
 	   commandLineOptionsBuilder.trace(this.trace);
-	   commandLineOptionsBuilder.olFilepath( olFilePath );
+	   if (olFilePath != null){
+			commandLineOptionsBuilder.olFilepath( olFilePath );
+	   }else{
+	      commandLineOptionsBuilder.olFilepath( this.olFilepath );
+	   }
 	   
 		try {
 			return commandLineOptionsBuilder.build();
@@ -503,6 +512,15 @@ public class CommandLineOptionsType implements Closeable
 		{
 			this.parentClassLoader = parentClassLoader;
 		}
+		
+		public void programStream ( InputStream programStream){
+		   this.programStream = programStream;
+		}
+		
+		public void source (String source){
+		 this.source = source;
+		}
+		
 
 		public CommandLineOptionsType build() throws IOException, CommandLineException
 		{
@@ -531,6 +549,7 @@ public class CommandLineOptionsType implements Closeable
 				} else {
 					throw new FileNotFoundException( olFilepath );
 				}
+				
 			}
 			isProgramCompiled = olFilepath.endsWith( ".olc" );
 			trace = trace && !isProgramCompiled;

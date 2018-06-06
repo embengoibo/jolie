@@ -963,12 +963,12 @@ public class Interpreter
 	 * @throws FileNotFoundException if one of the passed input files is not found.
 	 * @throws IOException if a Scanner constructor signals an error.
 	 */
-	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, Interpreter parentInterpreter, Program internalServiceProgram )
+	public Interpreter( CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, Interpreter internalInterpreter , Program internalServiceProgram)
 		throws CommandLineException, FileNotFoundException, IOException
 	{
-		this( parentInterpreter.commandLineOptions, parentClassLoader, programDirectory);
-
-		this.parentInterpreter = parentInterpreter;
+		this( commandLineOptions , parentClassLoader, commandLineOptions.programDirectory());
+        
+		this.parentInterpreter = internalInterpreter;
 		this.internalServiceProgram = internalServiceProgram;
 	}
 	

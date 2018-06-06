@@ -56,10 +56,8 @@ public abstract class EmbeddedServiceLoader
 				switch( configuration.type() ) {
 					case JAVA:
 						ret = new JavaServiceLoader( channelDest, externalConfiguration.servicePath(), interpreter );
-					
 						break;
 					case JOLIE:
-						
 						ret = new JolieServiceLoader( channelDest, interpreter, externalConfiguration.servicePath() );
 						break;
 					default:

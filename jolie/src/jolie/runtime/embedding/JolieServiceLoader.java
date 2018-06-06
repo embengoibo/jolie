@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 import jolie.CommandLineException;
+import jolie.CommandLineOptionsType;
 import jolie.Interpreter;
 import jolie.runtime.expression.Expression;
 
@@ -36,22 +37,15 @@ public class JolieServiceLoader extends EmbeddedServiceLoader
 	private  Interpreter interpreter;
 	
 	public JolieServiceLoader( Expression channelDest, Interpreter currInterpreter, String servicePath )
-		throws IOException, CommandLineException
+		throws IOException, CommandLineException, CloneNotSupportedException
 	{
 		super( channelDest );
-		final String[] ss = servicePathSplitPattern.split( servicePath );
-		final String[] options = currInterpreter.optionArgs();
-				
-		final String[] newArgs = new String[ 2 + options.length + ss.length ];
-		newArgs[0] = "-i";
-		newArgs[1] = currInterpreter.programDirectory().getAbsolutePath();
-		System.arraycopy( options, 0, newArgs, 2, options.length );
-		System.arraycopy( ss, 0, newArgs, 2 + options.length, ss.length );
-	/*	interpreter = new Interpreter(
-			newArgs,
+		CommandLineOptionsType commandLineOptions = currInterpreter.commandLineOptions().cloneCommandLineOptionsType( servicePath, currInterpreter.programDirectory().getAbsolutePath());
+		interpreter = new Interpreter(
+			commandLineOptions,
 			currInterpreter.getClassLoader(),
 			currInterpreter.programDirectory()
-		);*/
+		);
 	}
 
 	public void load()

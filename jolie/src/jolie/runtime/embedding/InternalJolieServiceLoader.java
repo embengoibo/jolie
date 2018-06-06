@@ -52,7 +52,8 @@ public class InternalJolieServiceLoader extends EmbeddedServiceLoader
 			
 			CommandLineOptionsType commandLineOptions = currInterpreter.commandLineOptions().cloneCommandLineOptionsType( nameFileService, currInterpreter.programDirectory().getAbsolutePath());
 			
-			interpreter = new Interpreter(commandLineOptions, currInterpreter.getClassLoader(), null );
+			interpreter = new Interpreter(commandLineOptions, currInterpreter.parentClassLoader(), currInterpreter, program );
+			
 		} catch( CloneNotSupportedException ex ) {
 			Logger.getLogger( InternalJolieServiceLoader.class.getName() ).log( Level.SEVERE, null, ex );
 		}
