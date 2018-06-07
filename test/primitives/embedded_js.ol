@@ -21,7 +21,7 @@ Interfaces: TwiceInterface
 
 embedded {
 JavaScript:
-	"/private/TwiceService.js" in TwiceService
+	"primitives/private/TwiceService.js" in TwiceService
 }
 
 define doTest

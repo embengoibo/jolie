@@ -248,7 +248,7 @@ public class Interpreter
 	private final Map< String, CorrelationSet> operationCorrelationSetMap = new HashMap<>();
 	private Constants.ExecutionMode executionMode = Constants.ExecutionMode.SINGLE;
 	private final Value globalValue = Value.createRootValue();
-	private  String[] arguments;
+	private String[] arguments;
 	private final Collection< EmbeddedServiceLoader> embeddedServiceLoaders = new ArrayList<>();
 	private static final Logger logger = Logger.getLogger( "Jolie" );
 
@@ -860,14 +860,14 @@ public class Interpreter
 	 * @throws FileNotFoundException if one of the passed input files is not found.
 	 * @throws IOException if a Scanner constructor signals an error.
 	 */
-/*  public Interpreter(  CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, File programDirectory )
+	/*  public Interpreter(  CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, File programDirectory )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
 		
 		this()
 	}
-*/
-	public Interpreter( CommandLineOptionsType commandLineOptions ,ClassLoader parentClassLoader, File programDirectory ) throws IOException
+	 */
+	public Interpreter( CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, File programDirectory ) throws IOException
 	{
 		this.commandLineOptions = commandLineOptions;
 
@@ -877,14 +877,14 @@ public class Interpreter
 		this.correlationEngine = this.commandLineOptions.correlationEngine().createInstance( this );
 
 		commCore = new CommCore( this, this.commandLineOptions.connectionLimit() /*, cmdParser.connectionsCache() */ );
-        programFilename = this.commandLineOptions.programDirectory().getName();
-		
+		programFilename = this.commandLineOptions.programDirectory().getName();
+
 		StringBuilder builder = new StringBuilder();
 		builder.append( '[' );
 		builder.append( programFilename );
 		builder.append( "] " );
 		logPrefix = builder.toString();
-         
+
 		if ( this.commandLineOptions.trace() ) {
 			tracer = new PrintingTracer( this );
 		} else {
@@ -895,8 +895,8 @@ public class Interpreter
 
 		exitingLock = new ReentrantLock();
 		exitingCondition = exitingLock.newCondition();
-        classLoader = this.commandLineOptions.classLoader();
-		arguments = (String[]) this.commandLineOptions.programArgumentsList().toArray( new String [this.commandLineOptions.programArgumentsList().size()]);
+		classLoader = this.commandLineOptions.classLoader();
+		arguments = (String[]) this.commandLineOptions.programArgumentsList().toArray( new String[ this.commandLineOptions.programArgumentsList().size() ] );
 		if ( this.commandLineOptions.programDirectory() == null ) {
 			this.programDirectory = programDirectory;
 		} else {
@@ -907,9 +907,9 @@ public class Interpreter
 		}
 
 	}
-	
 
-/*	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, boolean ignoreFile )
+
+	/*	public Interpreter( String[] args, ClassLoader parentClassLoader, File programDirectory, boolean ignoreFile )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
 		this.parentClassLoader = parentClassLoader;
@@ -951,7 +951,6 @@ public class Interpreter
 			throw new IOException( "Could not localize the service execution directory. This is probably a bug in the JOLIE interpreter, please report it to jolie-devel@lists.sf.net" );
 		}
 	}*/
-
 	/**
 	 * Constructor.
 	 *
@@ -963,23 +962,22 @@ public class Interpreter
 	 * @throws FileNotFoundException if one of the passed input files is not found.
 	 * @throws IOException if a Scanner constructor signals an error.
 	 */
-	public Interpreter( CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, Interpreter internalInterpreter , Program internalServiceProgram)
+	public Interpreter( CommandLineOptionsType commandLineOptions, ClassLoader parentClassLoader, Interpreter internalInterpreter, Program internalServiceProgram )
 		throws CommandLineException, FileNotFoundException, IOException
 	{
-		this( commandLineOptions , parentClassLoader, commandLineOptions.programDirectory());
-        
+		this( commandLineOptions, parentClassLoader, commandLineOptions.programDirectory() );
+
 		this.parentInterpreter = internalInterpreter;
 		this.internalServiceProgram = internalServiceProgram;
 	}
-	
+
 	/**
 	 * @return the parent directory of the program executed by this Interpreter.
 	 */
-	
-	public CommandLineOptionsType commandLineOptions(){
-	   return this.commandLineOptions;
+	public CommandLineOptionsType commandLineOptions()
+	{
+		return this.commandLineOptions;
 	}
-	
 
 	/**
 	 * Returns the parent directory of the program executed by this Interpreter.
@@ -1313,7 +1311,7 @@ public class Interpreter
 	{
 		try {
 			Program program;
-			
+
 			if ( commandLineOptions.isProgramCompiled() ) {
 				final ObjectInputStream istream = new ObjectInputStream( commandLineOptions.programStream() );
 				final Object o = istream.readObject();
@@ -1336,7 +1334,7 @@ public class Interpreter
 
 			commandLineOptions.close();
 
-			check =  commandLineOptions.check();
+			check = commandLineOptions.check();
 
 			final SemanticVerifier semanticVerifier;
 
@@ -1355,7 +1353,7 @@ public class Interpreter
 				throw new InterpreterException( "Exiting" );
 			}
 
-			if (  commandLineOptions.typeCheck() ) {
+			if ( commandLineOptions.typeCheck() ) {
 				TypeChecker typeChecker = new TypeChecker(
 					program,
 					semanticVerifier.executionMode(),

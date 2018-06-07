@@ -21,7 +21,7 @@
 
 include "../AbstractTestUnit.iol"
 
-include "private/weatherService.iol"
+//include "private/weatherService.iol"
 
 define doTest
 {
@@ -29,7 +29,7 @@ define doTest
 	    .CityName = "Bolzano";
 	    .CountryName = "Italy"
 	};
-	GetWeather@GlobalWeatherSoap( request )( response );
+//	GetWeather@GlobalWeatherSoap( request )( response );
 	if ( !is_defined( response.GetWeatherResult ) ) {
 		throw( TestFailed, "No webservice response" )
 	}

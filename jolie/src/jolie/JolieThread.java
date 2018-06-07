@@ -1,4 +1,4 @@
-/***************************************************************************
+/** *************************************************************************
  *   Copyright (C) by Fabrizio Montesi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,16 +17,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  *                                                                         *
  *   For details about the authors of this software, see the AUTHORS file. *
- ***************************************************************************/
-
+ ************************************************************************** */
 package jolie;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A thread that can refer to its generating <code>Interpreter</code>.
- * The name of <code>JolieThread</code> is prefixed with the program file name
- * of the generating <code>Interpreter</code>.
+ * A thread that can refer to its generating <code>Interpreter</code>. The name of <code>JolieThread</code> is prefixed with the program
+ * file name of the generating <code>Interpreter</code>.
+ *
  * @see Interpreter
  * @author Fabrizio Montesi
  */
@@ -40,7 +39,7 @@ public abstract class JolieThread implements Runnable
 	{
 		return "JolieThread-" + counter.getAndIncrement();
 	}
-	
+
 	public String name()
 	{
 		return name;
@@ -48,6 +47,7 @@ public abstract class JolieThread implements Runnable
 
 	/**
 	 * Constructor
+	 *
 	 * @param interpreter the <code>Interpreter</code> this thread will refer to
 	 * @param name the suffix name for this thread
 	 * @see Interpreter
@@ -60,6 +60,7 @@ public abstract class JolieThread implements Runnable
 
 	/**
 	 * Constructor
+	 *
 	 * @param interpreter the <code>Interpreter</code> this thread will refer to
 	 * @see Interpreter
 	 */
@@ -67,7 +68,7 @@ public abstract class JolieThread implements Runnable
 	{
 		this( interpreter, createThreadName() );
 	}
-	
+
 	/**
 	 * Returns the interpreter that this thread refers to.
 	 */

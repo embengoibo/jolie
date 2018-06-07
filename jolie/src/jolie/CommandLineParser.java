@@ -5,8 +5,7 @@
  * ANY WARRANTY; without even the implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the * GNU General Public
  * License for more details. * * You should have received a copy of the GNU Library General Public * License along with this program; if
  * not, write to the * Free Software Foundation, Inc., * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * * For details about the
- * authors of this software, see the AUTHORS file. *
- **************************************************************************
+ * authors of this software, see the AUTHORS file. * *************************************************************************
  */
 package jolie;
 
@@ -66,17 +65,17 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the arguments passed to the JOLIE program.
 	 */
-/*	public String[] arguments()
+	/*	public String[] arguments()
 	{
 		return arguments;
 	}
-*/
+	 */
 	/**
 	 * Returns the {@link Level} of the logger of this interpreter.
 	 *
 	 * @return the {@link Level} of the logger of this interpreter.
 	 */
-/*	public Level logLevel()
+	/*	public Level logLevel()
 	{
 		return logLevel;
 	}
@@ -86,7 +85,7 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return <code>true</code> if the verbose option has been specified, false otherwise
 	 */
-/*	public boolean tracer()
+ /*	public boolean tracer()
 	{
 		return tracer;
 	}
@@ -96,7 +95,7 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return <code>true</code> if the verbose option has been specified, false otherwise
 	 */
-/*	public boolean check()
+ /*	public boolean check()
 	{
 		return check;
 	}
@@ -106,7 +105,7 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return {@code true} if the program is compiled, {@code false} otherwise.
 	 */
-/*	public boolean isProgramCompiled()
+ /*	public boolean isProgramCompiled()
 	{
 		return isProgramCompiled;
 	}
@@ -116,27 +115,26 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the file path of the JOLIE program to execute
 	 */
-/*	public File programFilepath()
+ /*	public File programFilepath()
 	{
 		return programFilepath;
 	}*/
-
 	/**
 	 * Returns an InputStream for the program code to execute.
 	 *
 	 * @return an InputStream for the program code to execute
 	 */
-/*public InputStream programStream()
+	/*public InputStream programStream()
 	{
 		return programStream;
 	}
-*/
+	 */
 	/**
 	 * Returns the program's character encoding
 	 *
 	 * @return the program's character encoding
 	 */
-/*	public String charset()
+	/*	public String charset()
 	{
 		return charset;
 	}
@@ -155,27 +153,26 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the library URLs passed by command line
 	 */
-/*	public URL[] libURLs()
+	/*	public URL[] libURLs()
 	{
 		return libURLs;
 	}
-*/
+	 */
 	/**
 	 * Returns the include paths passed by command line with the -i option.
 	 *
 	 * @return the include paths passed by command line
 	 */
-/*	public String[] includePaths()
+	/*	public String[] includePaths()
 	{
 		return includePaths;
 	} */
-
 	/**
 	 * Returns the connection limit parameter passed by command line with the -c option.
 	 *
 	 * @return the connection limit parameter passed by command line
 	 */
-/*	public int connectionsLimit()
+	/*	public int connectionsLimit()
 	{
 		return connectionsLimit;
 	}
@@ -185,11 +182,10 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the connection cache parameter passed by command line
 	 */
-/*	public int connectionsCache()
+ /*	public int connectionsCache()
 	{
 		return connectionsCache;
 	}*/
-
 	private static String getOptionString( String option, String description )
 	{
 		return ('\t' + option + "\t\t" + description + '\n');
@@ -205,11 +201,11 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return a map containing the constants defined by command line
 	 */
-/*	public Map< String, Scanner.Token> definedConstants()
+	/*	public Map< String, Scanner.Token> definedConstants()
 	{
 		return constants;
 	}
-*/
+	 */
 	/**
 	 * Returns the usage help message of Jolie.
 	 *
@@ -265,7 +261,7 @@ public class CommandLineParser implements Closeable
 				if ( token.isValidConstant() == false ) {
 					throw new IOException( "expected constant value for constant identifier " + id + ", found token type " + token.type() );
 				}
-				builder.constants ( id, token );
+				builder.constants( id, token );
 			} else {
 				throw new IOException( "expected constant identifier, found token type " + token.type() );
 			}
@@ -290,11 +286,10 @@ public class CommandLineParser implements Closeable
 	 * @return the type of correlation algorithm that has been specified.
 	 * @see CorrelationEngine
 	 */
-/*	public CorrelationEngine.Type correlationAlgorithmType()
+	/*	public CorrelationEngine.Type correlationAlgorithmType()
 	{
 		return correlationAlgorithmType;
 	}*/
-
 	/**
 	 * Constructor
 	 *
@@ -416,8 +411,8 @@ public class CommandLineParser implements Closeable
 			} else if ( "--connlimit".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
-				cLimit = Integer.parseInt( argsList.get( i ));
-				
+				cLimit = Integer.parseInt( argsList.get( i ) );
+
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--conncache".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
@@ -468,7 +463,7 @@ public class CommandLineParser implements Closeable
 			} else if ( "--charset".equals( argsList.get( i ) ) ) {
 				optionsList.add( argsList.get( i ) );
 				i++;
-				
+
 				builder.charset( argsList.get( i ) );
 				optionsList.add( argsList.get( i ) );
 			} else if ( "--version".equals( argsList.get( i ) ) ) {
@@ -500,7 +495,7 @@ public class CommandLineParser implements Closeable
 					argsList.addAll( i + 1, japOptions );
 					japUrl = japFilename + "!";
 					builder.programDirectory( new File( japFilename ).getParentFile() );
-					
+
 				} else {
 
 					builder.programArgumentsList( argsList.get( i ) );
@@ -522,11 +517,11 @@ public class CommandLineParser implements Closeable
 			programArgumentsList.add( argsList.get( i ) );
 			builder.programArgumentsList( argsList.get( i ) );
 		}
-		
-		builder.connectionLimit( cLimit);
+
+		builder.connectionLimit( cLimit );
 		builder.connectionsCache( cCache );
 
-/*		typeCheck = bTypeCheck;
+		/*		typeCheck = bTypeCheck;
 		logLevel = lLogLevel;
 
 		correlationAlgorithmType = CorrelationEngine.Type.fromString( csetAlgorithmName );
@@ -632,11 +627,10 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the directory in which the main program is located.
 	 */
-/*	public File programDirectory()
+	/*	public File programDirectory()
 	{
 		return programDirectory;
 	}*/
-
 	/**
 	 * Returns the value of the --typecheck option.
 	 *
@@ -652,7 +646,7 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the classloader to use for the program.
 	 */
-	/*public JolieClassLoader jolieClassLoader()
+ /*public JolieClassLoader jolieClassLoader()
 	{
 		return jolieClassLoader;
 	}
@@ -662,7 +656,7 @@ public class CommandLineParser implements Closeable
 	 *
 	 * @return the command line options passed to this command line parser.
 	 */
-	/*public String[] optionArgs()
+ /*public String[] optionArgs()
 	{
 		return optionArgs;
 	}
@@ -671,7 +665,6 @@ public class CommandLineParser implements Closeable
 	{
 
 	}*/
-
 	private String parseJapManifestForMainProgram( Manifest manifest, JarFile japFile )
 	{
 		String filepath = null;
@@ -727,7 +720,7 @@ public class CommandLineParser implements Closeable
 		private InputStream stream;
 	}
 
-/*	private GetOLStreamResult getOLStream( String olFilepath, Deque< String> includePaths, ClassLoader classLoader )
+	/*	private GetOLStreamResult getOLStream( String olFilepath, Deque< String> includePaths, ClassLoader classLoader )
 		throws FileNotFoundException, IOException
 	{
 		GetOLStreamResult result = new GetOLStreamResult();
@@ -793,7 +786,6 @@ public class CommandLineParser implements Closeable
 		}
 		return result;
 	}*/
-
 	/**
 	 * A handler for unrecognized arguments, meant to be implemented by classes that wants to extend the behaviour of
 	 * {@link jolie.CommandLineParser}.

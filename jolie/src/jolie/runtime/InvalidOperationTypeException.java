@@ -1,4 +1,4 @@
-/***************************************************************************
+/** *************************************************************************
  *   Copyright (C) by Fabrizio Montesi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,9 +17,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  *                                                                         *
  *   For details about the authors of this software, see the AUTHORS file. *
- ***************************************************************************/
-
-
+ ************************************************************************** */
 package jolie.runtime;
 
 import jolie.lang.Constants;
